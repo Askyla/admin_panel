@@ -166,25 +166,23 @@
                 const email = $('input[name="email"]').val();
                 const password = $('input[name="password"]').val();
 
-                // Send AJAX POST request
+                // Send AJAX POST request using form data
                 $.ajax({
-                    url: 'https://server.askyla.com/api/users/admin-login', // Replace with your API endpoint
+                    url: 'https://server.askyla.com/api/users/admin-login',
                     method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    data: {
                         email: email,
                         password: password
-                    }),
+                    },
                     success: function (response) {
-                        // Assuming the token is returned on success
                         if (response.token) {
-                            // Optionally store token in localStorage or sessionStorage
                             localStorage.setItem('token', response.token);
-
-                            // Redirect to dashboard
                             window.location.href = 'dashboard.html';
                         } else {
-                            alert('Login failed: Invalid response');
+                            alert('Login failed: No token received');
                         }
                     },
                     error: function (xhr) {
@@ -195,6 +193,7 @@
             });
         });
     </script>
+
 
 </body>
 <!--end::Body-->
