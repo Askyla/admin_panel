@@ -20,31 +20,30 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!--end::Global Stylesheets Bundle-->
     <script>
-        $(document).ready(function () {
-            const token = localStorage.getItem('token');
-            console.log(token)
+        const token = localStorage.getItem('token');
+        console.log(token)
 
-            if (!token) {
-                // No token = not logged in
-                console.log('No token found.');
-                return;
+        if (!token) {
+            // No token = not logged in
+            console.log('No token found.');
+            return;
+        }
+
+        $.ajax({
+            url: 'https://server.askyla.com/api/users/protected-check', // Replace with your actual protected check endpoint
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (response) {
+                // Token is valid, redirect to dashboard
+                alert("You are already logged in");
+                window.location.href = 'dashboard.html';
+            },
+            error: function (xhr) {
+                // Token invalid or error, stay on current page
+                console.log('Not logged in or token invalid.');
             }
-
-            $.ajax({
-                url: 'https://server.askyla.com/api/users/protected-check', // Replace with your actual protected check endpoint
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function (response) {
-                    // Token is valid, redirect to dashboard
-                    window.location.href = 'dashboard.html';
-                },
-                error: function (xhr) {
-                    // Token invalid or error, stay on current page
-                    console.log('Not logged in or token invalid.');
-                }
-            });
         });
     </script>
 
