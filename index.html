@@ -16,7 +16,37 @@
     <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
     <link href="./assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css">
     <link href="./assets/css/style.bundle.css" rel="stylesheet" type="text/css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!--end::Global Stylesheets Bundle-->
+    <script>
+        $(document).ready(function () {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                // No token = not logged in
+                console.log('No token found.');
+                return;
+            }
+
+            $.ajax({
+                url: 'https://server.askyla.com/api/users/protected-admin-check', // Replace with your actual protected check endpoint
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function (response) {
+                    // Token is valid, redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                },
+                error: function (xhr) {
+                    // Token invalid or error, stay on current page
+                    console.log('Not logged in or token invalid.');
+                }
+            });
+        });
+    </script>
+
 
 
 </head>
@@ -156,7 +186,6 @@
     <!-- <script src="../../../assets/js/custom/authentication/sign-in/general.js"></script> -->
     <!--end::Custom Javascript-->
     <!--end::Javascript-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#kt_sign_in_form').submit(function (e) {
