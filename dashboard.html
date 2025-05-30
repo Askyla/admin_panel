@@ -27,6 +27,29 @@
     <link href="../assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css">
     <link href="../assets/css/style.bundle.css" rel="stylesheet" type="text/css">
     <!--end::Global Stylesheets Bundle-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: 'https://server.askyla.com/api/form/contact', // Change to full URL if API is hosted separately
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === "Success" && Array.isArray(response.data)) {
+                        const count = response.data.length;
+                        $('#contact').text(count);
+                    } else {
+                        $('#contact').text('0');
+                        console.error("Unexpected API response:", response);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#contact').text('0');
+                    console.error("API request failed:", error);
+                }
+            });
+        });
+    </script>
 
 
 </head>
@@ -79,7 +102,7 @@
                     <div class="app-navbar flex-lg-grow-1" id="kt_app_header_navbar">
                         <div class="app-navbar-item d-flex align-items-stretch flex-lg-grow-1 me-1 me-lg-0">
 
-                          
+
                         </div>
 
                         <!--begin::Action-->
@@ -155,28 +178,28 @@
                                                 class="ki-outline ki-category fs-2"></i></span><span
                                             class="menu-title">Dashboards</span><span
                                             class="menu-arrow"></span></span><!--end:Menu link--><!--begin:Menu sub-->
-                                    
+
                                 </div><!--end:Menu item--><!--begin:Menu item-->
                                 <div data-kt-menu-trigger="click" class="menu-item">
                                     <!--begin:Menu link--><span class="menu-link"><span class="menu-icon"><i
                                                 class="ki-outline ki-directbox-default fs-2"></i></span><span
                                             class="menu-title">Newsletters</span><span
                                             class="menu-arrow"></span></span><!--end:Menu link--><!--begin:Menu sub-->
-                                    
+
                                 </div><!--end:Menu item--><!--begin:Menu item-->
                                 <div data-kt-menu-trigger="click" class="menu-item">
                                     <!--begin:Menu link--><span class="menu-link"><span class="menu-icon"><i
                                                 class="ki-outline ki-message-edit fs-2"></i></span><span
                                             class="menu-title">Feedback</span><span
                                             class="menu-arrow"></span></span><!--end:Menu link--><!--begin:Menu sub-->
-                                    
+
                                 </div><!--end:Menu item--><!--begin:Menu item-->
                                 <div data-kt-menu-trigger="click" class="menu-item">
                                     <!--begin:Menu link--><span class="menu-link"><span class="menu-icon"><i
                                                 class="ki-outline ki-artificial-intelligence fs-2"></i></span><span
                                             class="menu-title">AI Model</span><span
                                             class="menu-arrow"></span></span><!--end:Menu link--><!--begin:Menu sub-->
-                                    
+
                                 </div><!--end:Menu item--><!--begin:Menu item-->
                             </div>
                             <!--end::Menu-->
@@ -502,7 +525,7 @@
                                                                 <div class="m-0">
                                                                     <!--begin::Number-->
                                                                     <span
-                                                                        class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">6</span>
+                                                                        class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1" id="contact">6</span>
                                                                     <!--end::Number-->
 
                                                                     <!--begin::Desc-->
