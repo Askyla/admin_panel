@@ -28,7 +28,36 @@
     <link href="../assets/css/style.bundle.css" rel="stylesheet" type="text/css">
     <!--end::Global Stylesheets Bundle-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        console.log(token)
 
+        if (!token) {
+            // No token = not logged in
+            console.log('No token found.');
+            window.location.href = 'index.html';
+        }
+        else {
+
+            $.ajax({
+                url: 'https://server.askyla.com/api/users/protected-check', // Replace with your actual protected check endpoint
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function (response) {
+                    // Token is valid, redirect to dashboard
+                    console.log('Logged In');
+                },
+                error: function (xhr) {
+                    // Token invalid or error, stay on current page
+                    console.log('Not logged in or token invalid.');
+                    window.location.href = 'index.html';
+                }
+            });
+
+        }
+    </script>
     <script>
         $(document).ready(function () {
             const $tableBody = $('#table1');
@@ -167,12 +196,12 @@
 
                         <!--begin::Action-->
                         <div class="app-navbar-item ms-1 ms-md-3">
-                            <a href="#"
+                            <button onclick="logout()"
                                 class="btn btn-flex btn-icon align-self-center fw-bold btn-secondary w-30px w-md-100 h-30px h-md-35px px-4 ms-3"
                                 data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan">
                                 <i class="ki-outline ki-exit-right-corner fs-3"></i>
                                 <span class="d-none d-md-inline ms-2 fs-7">Sign Out</span>
-                            </a>
+                        </button>
                         </div>
                         <!--end::Action-->
                     </div>
@@ -331,9 +360,9 @@
 
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-5">
-                                    <a href="../authentication/layouts/corporate/sign-in.html" class="menu-link px-5">
+                                    <button onclick="logout()" class="menu-link px-5">
                                         Sign Out
-                                    </a>
+                                    </button>
                                 </div>
                                 <!--end::Menu item-->
                             </div>
