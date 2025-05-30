@@ -28,6 +28,96 @@
     <link href="../assets/css/style.bundle.css" rel="stylesheet" type="text/css">
     <!--end::Global Stylesheets Bundle-->
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            const $tableBody = $('#table1');
+            const $contactCount = $('#contact');
+
+            // Show preloader in table
+            $tableBody.html(`
+            <tr id="kt_customer_details_invoices_table_1_loader">
+                <td colspan="2" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </td>
+            </tr>
+        `);
+
+            $.ajax({
+                url: 'https://server.askyla.com/api/form/contact',
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === "Success" && Array.isArray(response.data)) {
+                        const contacts = response.data;
+                        $contactCount.text(contacts.length);
+
+                        if (contacts.length === 0) {
+                            $tableBody.html(`
+                            <table id="kt_customer_details_invoices_table_1"
+                                                                class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
+                            <tbody class="fs-6 fw-semibold text-gray-600" id="kt_customer_details_invoices_table_1_body">
+                                <tr><td colspan="2" class="text-center text-muted">No contacts found.</td></tr>
+                            
+                            </tbody>
+                            </table>
+                            `);
+                            return;
+                        }
+
+                        let html = `
+                        <table id="kt_customer_details_invoices_table_1"
+                                                                class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
+                        <thead
+                            class="border-bottom border-gray-200 fs-7 text-uppercase fw-bold">
+                            <tr class="text-start text-gray-500">
+                                <th class="w-200px">Email Id</th>
+                                <th class="min-w-100">Message</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fs-6 fw-semibold text-gray-600">`;
+                        contacts.forEach(contact => {
+                            const email = contact.email || 'no-email@example.com';
+                            const message = contact.message || '';
+                            const wordArray = message.trim().split(/\s+/);
+                            const truncatedMessage = wordArray.slice(0, 30).join(' ') + (wordArray.length > 30 ? '...' : '');
+
+                            html += `
+                            <tr>
+                                <td><a href="#" class="text-gray-600 text-hover-primary">${email}</a></td>
+                                <td><p>${truncatedMessage}</p></td>
+                            </tr>
+                        `;
+                        });
+                        html += '</tbody></table>'
+
+                        $tableBody.html(html);
+                    } else {
+                        $contactCount.text('0');
+                        $tableBody.html(`
+                        <table id="kt_customer_details_invoices_table_1"
+                                                                class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
+                            <tbody class="fs-6 fw-semibold text-gray-600" id="kt_customer_details_invoices_table_1_body">
+                                <tr><td colspan="2" class="text-center text-danger">Unexpected response.</td></tr>
+                            </tbody></table>`);
+                    }
+                },
+                error: function () {
+                    $contactCount.text('0');
+                    $tableBody.html(`
+                    <table id="kt_customer_details_invoices_table_1"
+                                                                class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
+                            <tbody class="fs-6 fw-semibold text-gray-600" id="kt_customer_details_invoices_table_1_body">
+                                <tr><td colspan="2" class="text-center text-danger">Failed to load data.</td></tr>
+                            </tbody></table>`);
+                }
+            });
+        });
+    </script>
+
 
 </head>
 <!--end::Head-->
@@ -152,29 +242,32 @@
                                 <!--begin:Menu item-->
 
                                 <div data-kt-menu-trigger="click" class="menu-item">
-                                    <!--begin:Menu link--><a class="menu-link" href="./dashboard.html"><span class="menu-icon"><i
-                                                class="ki-outline ki-category fs-2"></i></span><span
+                                    <!--begin:Menu link--><a class="menu-link" href="./dashboard.html"><span
+                                            class="menu-icon"><i class="ki-outline ki-category fs-2"></i></span><span
                                             class="menu-title">Dashboard</span><span
                                             class="menu-arrow"></span></a><!--end:Menu link--><!--begin:Menu sub-->
 
                                 </div><!--end:Menu item--><!--begin:Menu item-->
 
                                 <div data-kt-menu-trigger="click" class="menu-item">
-                                    <!--begin:Menu link--><a class="menu-link" href="./newsletter.html"><span class="menu-icon"><i
+                                    <!--begin:Menu link--><a class="menu-link" href="./newsletter.html"><span
+                                            class="menu-icon"><i
                                                 class="ki-outline ki-directbox-default fs-2"></i></span><span
                                             class="menu-title">Newsletter</span><span
                                             class="menu-arrow"></span></a><!--end:Menu link--><!--begin:Menu sub-->
 
                                 </div><!--end:Menu item--><!--begin:Menu item-->
                                 <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-                                    <!--begin:Menu link--><a class="menu-link" href="./feedback.html"><span class="menu-icon"><i
+                                    <!--begin:Menu link--><a class="menu-link" href="./feedback.html"><span
+                                            class="menu-icon"><i
                                                 class="ki-outline ki-message-edit fs-2"></i></span><span
                                             class="menu-title">Feedback</span><span
                                             class="menu-arrow"></span></a><!--end:Menu link--><!--begin:Menu sub-->
 
                                 </div><!--end:Menu item--><!--begin:Menu item-->
                                 <div data-kt-menu-trigger="click" class="menu-item">
-                                    <!--begin:Menu link--><a class="menu-link" href="./ai-model.html"><span class="menu-icon"><i
+                                    <!--begin:Menu link--><a class="menu-link" href="./ai-model.html"><span
+                                            class="menu-icon"><i
                                                 class="ki-outline ki-artificial-intelligence fs-2"></i></span><span
                                             class="menu-title">AI Model</span><span
                                             class="menu-arrow"></span></a><!--end:Menu link--><!--begin:Menu sub-->
@@ -335,6 +428,7 @@
                                                 <!--begin::Card title-->
                                                 <div class="card-title">
                                                     <h2>Feedbacks</h2>
+                                                    <span id="contact" style="margin-left: 10px; padding: 2px 10px; border-radius: 5px; background-color: #f7cb46; color: #fff;"></span>
                                                 </div>
                                                 <!--end::Card title-->
                                             </div>
@@ -348,92 +442,26 @@
                                                     <div id="kt_customer_details_invoices_1"
                                                         class="tab-pane fade show active" role="tabpanel">
                                                         <!--begin::Table wrapper-->
-                                                        <div class="table-responsive">
+                                                        <div class="table-responsive" id="table1">
                                                             <!--begin::Table-->
                                                             <table id="kt_customer_details_invoices_table_1"
                                                                 class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
-                                                                <thead
-                                                                    class="border-bottom border-gray-200 fs-7 text-uppercase fw-bold">
-                                                                    <tr class="text-start text-gray-500">
-                                                                        <th class="min-w-100">Email Id</th>
-                                                                        <th class="min-w-100">Message</th>
-                                                                        <th class="w-100px">Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody class="fs-6 fw-semibold text-gray-600">
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">john.doe@example.com</a></td>
-                                                                        <td>
-                                                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non magna quis libero tempor luctus. Cras vitae sapien vel velit laoreet interdum...</p>
+                                                                <tbody class="fs-6 fw-semibold text-gray-600"
+                                                                    id="kt_customer_details_invoices_table_1_body">
+                                                                    <tr
+                                                                        id="kt_customer_details_invoices_table_1_loader">
+                                                                        <td colspan="2" class="text-center">
+                                                                            <div class="spinner-border text-primary"
+                                                                                role="status">
+                                                                                <span
+                                                                                    class="visually-hidden">Loading...</span>
+                                                                            </div>
                                                                         </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
                                                                     </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">jane.smith@domain.net</a></td>
-                                                                        <td>
-                                                                            <p>Fusce quis justo nec neque dignissim vehicula. Maecenas vestibulum, felis ac varius feugiat, urna sapien commodo libero, ut efficitur lacus velit...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">alex.morris@company.org</a></td>
-                                                                        <td>
-                                                                            <p>Donec a diam vel nibh hendrerit ultrices. Pellentesque a felis libero. Integer fringilla convallis lacus, sit amet facilisis diam iaculis non...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">lisa.brown@techhub.io</a></td>
-                                                                        <td>
-                                                                            <p>Nam a eros eu nibh feugiat posuere. In viverra quam nec tortor placerat, at convallis nisl volutpat. Ut laoreet, sapien nec faucibus accumsan...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">michael.lee@workspace.dev</a></td>
-                                                                        <td>
-                                                                            <p>Sed mollis turpis a metus imperdiet, ac fermentum purus rutrum. Curabitur luctus justo non fermentum ullamcorper. Nullam tempor sem ut nulla...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">sara.white@bizmail.com</a></td>
-                                                                        <td>
-                                                                            <p>Aliquam eget enim at purus congue tristique. Etiam ut diam facilisis, suscipit nulla nec, pulvinar lectus. Duis vel nibh eget nulla efficitur...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">kevin.jones@startup.tech</a></td>
-                                                                        <td>
-                                                                            <p>Integer a enim sed neque iaculis sollicitudin. Pellentesque non lorem ut leo pharetra tincidunt. Vivamus convallis lacus in magna feugiat...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">nina.thomas@freelance.xyz</a></td>
-                                                                        <td>
-                                                                            <p>Proin ut nunc nec eros congue blandit. Sed ultricies justo in porttitor iaculis. Nullam consequat, nisi nec scelerisque vestibulum, nisi purus...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">bruce.wayne@gothammail.com</a></td>
-                                                                        <td>
-                                                                            <p>Morbi in ante id erat suscipit sollicitudin. Sed hendrerit, velit eget euismod hendrerit, lectus felis tempor nulla, at pretium nunc nulla...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-gray-600 text-hover-primary">clark.kent@dailyplanet.org</a></td>
-                                                                        <td>
-                                                                            <p>Phasellus vitae turpis nec sapien imperdiet consequat. Cras a commodo odio. Sed a urna sed libero convallis facilisis in in erat. Fusce in...</p>
-                                                                        </td>
-                                                                        <td><button class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button></td>
-                                                                    </tr>                                                                   
-
                                                                 </tbody>
                                                             </table>
+
+
                                                             <!--end::Table-->
                                                         </div>
                                                         <!--end::Table wrapper-->

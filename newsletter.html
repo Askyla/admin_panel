@@ -27,7 +27,90 @@
     <link href="../assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css">
     <link href="../assets/css/style.bundle.css" rel="stylesheet" type="text/css">
     <!--end::Global Stylesheets Bundle-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            const $tableBody = $('#table1');
+            const $contactCount = $('#contact');
+
+            // Show preloader in table
+            $tableBody.html(`
+            <tr id="kt_customer_details_invoices_table_1_loader">
+                <td colspan="2" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </td>
+            </tr>
+        `);
+
+            $.ajax({
+                url: 'https://server.askyla.com/api/form/newsletter',
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === "Success" && Array.isArray(response.data)) {
+                        const contacts = response.data;
+                        $contactCount.text(contacts.length);
+
+                        if (contacts.length === 0) {
+                            $tableBody.html(`
+                            <table id="kt_customer_details_invoices_table_1"
+                                                                class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
+                            <tbody class="fs-6 fw-semibold text-gray-600" id="kt_customer_details_invoices_table_1_body">
+                                <tr><td colspan="2" class="text-center text-muted">No contacts found.</td></tr>
+                            
+                            </tbody>
+                            </table>
+                            `);
+                            return;
+                        }
+
+                        let html = `
+                        <table id="kt_customer_details_invoices_table_1"
+                                                                class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
+                        <thead
+                            class="border-bottom border-gray-200 fs-7 text-uppercase fw-bold">
+                            <tr class="text-start text-gray-500">
+                                <th class="w-200px">Email Id</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fs-6 fw-semibold text-gray-600">`;
+                        contacts.forEach(contact => {
+                            const email = contact.email || 'no-email@example.com';
+
+                            html += `
+                            <tr>
+                                <td><a href="#" class="text-gray-600 text-hover-primary">${email}</a></td>
+                            </tr>
+                        `;
+                        });
+                        html += '</tbody></table>'
+
+                        $tableBody.html(html);
+                    } else {
+                        $contactCount.text('0');
+                        $tableBody.html(`
+                        <table id="kt_customer_details_invoices_table_1"
+                                                                class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
+                            <tbody class="fs-6 fw-semibold text-gray-600" id="kt_customer_details_invoices_table_1_body">
+                                <tr><td colspan="2" class="text-center text-danger">Unexpected response.</td></tr>
+                            </tbody></table>`);
+                    }
+                },
+                error: function () {
+                    $contactCount.text('0');
+                    $tableBody.html(`
+                    <table id="kt_customer_details_invoices_table_1"
+                                                                class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
+                            <tbody class="fs-6 fw-semibold text-gray-600" id="kt_customer_details_invoices_table_1_body">
+                                <tr><td colspan="2" class="text-center text-danger">Failed to load data.</td></tr>
+                            </tbody></table>`);
+                }
+            });
+        });
+    </script>
 
 </head>
 <!--end::Head-->
@@ -342,6 +425,7 @@
                                                 <!--begin::Card title-->
                                                 <div class="card-title">
                                                     <h2>Newsletters</h2>
+                                                    <span id="contact" style="margin-left: 10px; padding: 2px 10px; border-radius: 5px; background-color: #f7cb46; color: #fff;"></span>
                                                 </div>
                                                 <!--end::Card title-->
                                             </div>
@@ -355,102 +439,24 @@
                                                     <div id="kt_customer_details_invoices_1"
                                                         class="tab-pane fade show active" role="tabpanel">
                                                         <!--begin::Table wrapper-->
-                                                        <div class="table-responsive">
+                                                        <div class="table-responsive" id="table1">
                                                             <!--begin::Table-->
                                                             <table id="kt_customer_details_invoices_table_1"
                                                                 class="table align-middle table-row-dashed fs-6 fw-bold gs-0 gy-4 p-0 m-0">
-                                                                <thead
-                                                                    class="border-bottom border-gray-200 fs-7 text-uppercase fw-bold">
-                                                                    <tr class="text-start text-gray-500">
-                                                                        <th class="min-w-100">Email Id</th>
-                                                                        <th class="w-100px">Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody class="fs-6 fw-semibold text-gray-600">
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">john.doe@example.com</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
+                                                                <tbody class="fs-6 fw-semibold text-gray-600"
+                                                                    id="kt_customer_details_invoices_table_1_body">
+                                                                    <tr
+                                                                        id="kt_customer_details_invoices_table_1_loader">
+                                                                        <td colspan="2" class="text-center">
+                                                                            <div class="spinner-border text-primary"
+                                                                                role="status">
+                                                                                <span
+                                                                                    class="visually-hidden">Loading...</span>
+                                                                            </div>
                                                                         </td>
                                                                     </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">jane.smith@domain.net</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">alex.morris@company.org</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">lisa.brown@techhub.io</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">michael.lee@workspace.dev</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">sara.white@bizmail.com</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">kevin.jones@startup.tech</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">nina.thomas@freelance.xyz</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">bruce.wayne@gothammail.com</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td><a href="#"
-                                                                                class="text-gray-600 text-hover-primary">clark.kent@dailyplanet.org</a>
-                                                                        </td>
-                                                                        <td><button
-                                                                                class="btn btn-sm btn-danger btn-active-danger-primary">Delete</button>
-                                                                        </td>
-                                                                    </tr>
-
                                                                 </tbody>
                                                             </table>
-                                                            <!--end::Table-->
                                                         </div>
                                                         <!--end::Table wrapper-->
                                                     </div>
