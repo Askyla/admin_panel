@@ -29,6 +29,35 @@
     <!--end::Global Stylesheets Bundle-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        const token = localStorage.getItem('token');
+        console.log(token)
+
+        if (!token) {
+            // No token = not logged in
+            console.log('No token found.');
+        }
+        else {
+
+            $.ajax({
+                url: 'https://server.askyla.com/api/users/protected-check', // Replace with your actual protected check endpoint
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function (response) {
+                    // Token is valid, redirect to dashboard
+                    console.log('Logged In');
+                },
+                error: function (xhr) {
+                    // Token invalid or error, stay on current page
+                    console.log('Not logged in or token invalid.');
+                    window.location.href = 'index.html';
+                }
+            });
+
+        }
+    </script>
+    <script>
         $(document).ready(function () {
             $.ajax({
                 url: 'https://server.askyla.com/api/form/newsletter', // Change to full URL if API is hosted separately
@@ -646,6 +675,8 @@
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <script src="../assets/plugins/global/plugins.bundle.js"></script>
     <script src="../assets/js/scripts.bundle.js"></script>
+    
+    <script src="./assets/js/main.js"></script>
     <!--end::Global Javascript Bundle-->
 
     <!--begin::Vendors Javascript(used for this page only)-->
