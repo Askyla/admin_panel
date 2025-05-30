@@ -31,6 +31,26 @@
     <script>
         $(document).ready(function () {
             $.ajax({
+                url: 'https://server.askyla.com/api/form/newsletter', // Change to full URL if API is hosted separately
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === "Success" && Array.isArray(response.data)) {
+                        const count = response.data.length;
+                        $('#newsletter').text(count);
+                    } else {
+                        $('#newsletter').text('0');
+                        console.error("Unexpected API response:", response);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#newsletter').text('0');
+                    console.error("API request failed:", error);
+                }
+            });
+        });
+        $(document).ready(function () {
+            $.ajax({
                 url: 'https://server.askyla.com/api/form/contact', // Change to full URL if API is hosted separately
                 type: 'GET',
                 dataType: 'json',
@@ -495,7 +515,7 @@
                                                                 <div class="m-0">
                                                                     <!--begin::Number-->
                                                                     <span
-                                                                        class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1">37</span>
+                                                                        class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1" id="newsletter">Nan</span>
                                                                     <!--end::Number-->
 
                                                                     <!--begin::Desc-->
@@ -525,7 +545,7 @@
                                                                 <div class="m-0">
                                                                     <!--begin::Number-->
                                                                     <span
-                                                                        class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1" id="contact">6</span>
+                                                                        class="text-gray-700 fw-bolder d-block fs-2qx lh-1 ls-n1 mb-1" id="contact">Nan</span>
                                                                     <!--end::Number-->
 
                                                                     <!--begin::Desc-->
